@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="kdb:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/kdb_jar</output-path>
+    <root id="archive" name="kdb.jar">
+      <element id="module-output" name="kdb" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/commons-cli-1.4.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
