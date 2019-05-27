@@ -59,9 +59,7 @@ async def run_test(number_of_day, total_number, type_request):
                             l = f.readline()
                             d = list(map(float, l.strip().split(';')))
                             d[0] = datetime.fromtimestamp(d[0])
-                            # print(d)
                             bulk_data.append(d)
-                            # bulk_data.append('{}{}'.format(l[0:3], l[l.index(' '):]))
 
                         prev_time = time.time()
 

@@ -13,7 +13,7 @@ import os
 import time
 
 ANALYSIS_DIRECTORY = "../analysis/kairosdb"
-BENCHMARK_TEST = "bulk_load_and_retrieve"
+BENCHMARK_TEST = "latency_meter"
 QUERY_TYPE_LIST = {
     'count': json.dumps({
         "start_absolute": 1546300800000,
@@ -119,7 +119,7 @@ async def run_test(number_of_day, total_number, type_request):
 
     async with aiohttp.ClientSession() as session:
         try:
-            with open('../../data/csv/csv_1sec_{}d.dat'.format(number_of_day), 'rt') as f:
+            with open('../data/csv/csv_1sec_{}d.dat'.format(number_of_day), 'rt') as f:
                 f.readline()
                 network_setup = ''
                 if LATENCY_TYPE or PACKETLOSS_TYPE:
@@ -139,7 +139,6 @@ async def run_test(number_of_day, total_number, type_request):
                             for sensor in sensor_list:
                                 cnt += 1
                                 bulk_data[sensor].append([int(d[0]) * 1000, float(d[cnt])])
-                            # bulk_data.append('{}{}'.format(l[0:3], l[l.index(' '):]))
                         data = []
                         for sensor in sensor_list:
                             data.append(
@@ -154,22 +153,14 @@ async def run_test(number_of_day, total_number, type_request):
                         gzipped = gzip.compress(bytes(json.dumps(data), 'UTF-8'))
                         headers = {'content-type': 'application/gzip'}
 
-                        # gzipped = zlib.compress(bytes(json.dumps(data), 'UTF-8'))
-                        # headers = {'Content-Encoding': 'deflate', 'content-type': 'application/gzip'}
-
                         prev_time = time.time()
-                        # b = await session.post('http://localhost:8080/api/v1/datapoints', data=json.dumps(data))
+
                         b = await session.post('http://localhost:8080/api/v1/datapoints', data=gzipped, headers=headers)
-                        # async with session.post('http://localhost:8080/api/v1/datapoints', data=gzipped, headers=headers) as resp:
-                        #     b = await resp.read()
-                        #     print(b)
+
                         bulk_time = time.time()
 
                         a = await session.post('http://localhost:8080/api/v1/datapoints/query', data=query)
-                        # print(a)
-                        # async with session.post('http://localhost:8080/api/v1/datapoints/query', data=QUERY_TYPE_LIST[type_request]) as resp:
-                        #     a = await resp.read()
-                        #     print(a)
+
                         curr_time = time.time()
 
                         fw.write('{}\t{}\t{}\t{}\n'.format(i, curr_time - prev_time, bulk_time - prev_time,

@@ -9,7 +9,7 @@ from aioinflux import InfluxDBClient
 import datetime
 
 ANALYSIS_DIRECTORY = "../analysis/influxdb"
-BENCHMARK_TEST = "bulk_load_and_retrieve"
+BENCHMARK_TEST = "latency_meter"
 QUERY_TYPE_LIST = {
     'count': 'select count(sensor001) from ssdata where time >= START_TIME AND time <= END_TIME',
     'max': 'select max(sensor001) from ssdata where time >= START_TIME AND time <= END_TIME',
@@ -44,7 +44,7 @@ async def run_test(number_of_day, total_number, type_request):
             'END_TIME', '{}000000000'.format(int(time.mktime(end_time.timetuple()))))
         async with InfluxDBClient(db='benchmarkdb') as client:
             try:
-                with open('../../data/influx/influx_1sec_{}d.dat'.format(number_of_day), 'rt') as f:
+                with open('../data/influx/influx_1sec_{}d.dat'.format(number_of_day), 'rt') as f:
                     network_setup = ''
                     if LATENCY_TYPE or PACKETLOSS_TYPE:
                         network_setup = '_{}_{}'.format(LATENCY_TYPE, PACKETLOSS_TYPE)

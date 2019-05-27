@@ -9,7 +9,7 @@ import asyncpg
 import psycopg2
 
 ANALYSIS_DIRECTORY = "../analysis/timescaledb"
-BENCHMARK_TEST = "bulk_load_and_retrieve"
+BENCHMARK_TEST = "latency_meter"
 QUERY_TYPE_LIST = {
     'count': 'select count(*) from ssdata WHERE time > \'START_DATE\' AND time < \'END_DATE\'',
     'max': 'select max(sensor001) from ssdata WHERE time > \'START_DATE\' AND time < \'END_DATE\'',
@@ -32,7 +32,6 @@ def cleanup_db():
         cursor.execute('DROP TABLE IF EXISTS ssdata')
 
         s = ['sensor{:03d} DOUBLE PRECISION NULL'.format(i) for i in range(1, 11)]
-        # print('CREATE TABLE IF NOT EXISTS ssdata (time TIMESTAMPTZ NOT NULL, {});'.format(','.join(s)))
         cursor.execute('CREATE TABLE IF NOT EXISTS ssdata (time TIMESTAMPTZ NOT NULL, {});'.format(','.join(s)))
         cursor.execute("SELECT create_hypertable('ssdata', 'time');")
         connection.commit()
@@ -44,14 +43,6 @@ def cleanup_db():
         if connection:
             cursor.close()
             connection.close()
-            print("PostgreSQL connection is closed")
-
-    # client = influxdb.InfluxDBClient('localhost', 8086, 'root', 'root')
-    # client.drop_database('benchmarkdb')
-    # client.create_database('benchmarkdb')
-    # print('DROP TABLE IF EXISTS ssdata')
-    # print('CREATE TABLE IF NOT EXISTS ssdata (time TIMESTAMPTZ NOT NULL, {});'.format(','.join(s)))
-
 
 def setup_report():
     if not os.path.exists('{}/{}'.format(ANALYSIS_DIRECTORY, BENCHMARK_TEST)):
@@ -63,17 +54,13 @@ async def run_test(number_of_day, total_number, type_request):
         conn = await asyncpg.connect(user='postgres', password='postgres', database='benchmarkdb', host='127.0.0.1',
                                      port='5432')
 
-        # await conn.execute('DROP TABLE IF EXISTS ssdata')
-        #
-        # s = ['sensor{:03d} DOUBLE PRECISION NULL'.format(i) for i in range(1, 11)]
-        # await conn.execute('CREATE TABLE IF NOT EXISTS ssdata (time TIMESTAMPTZ NOT NULL, {});'.format(','.join(s)))
         end_date = datetime(2019, 1, 1, 0, 0, 0, 0) + timedelta(days=number_of_day)
         start_date = end_date - timedelta(days=1)
 
         query = QUERY_TYPE_LIST[type_request].replace('START_DATE', start_date.strftime('%Y-%m-%d')).replace(
             'END_DATE', end_date.strftime('%Y-%m-%d'))
         try:
-            with open('../../data/csv/csv_1sec_{}d.dat'.format(number_of_day), 'rt') as f:
+            with open('../data/csv/csv_1sec_{}d.dat'.format(number_of_day), 'rt') as f:
                 f.readline()
                 network_setup = ''
                 if LATENCY_TYPE or PACKETLOSS_TYPE:
@@ -88,9 +75,7 @@ async def run_test(number_of_day, total_number, type_request):
                             l = f.readline()
                             d = list(map(float, l.strip().split(';')))
                             d[0] = datetime.fromtimestamp(d[0])
-                            # print(d)
                             bulk_data.append(d)
-                            # bulk_data.append('{}{}'.format(l[0:3], l[l.index(' '):]))
 
                         prev_time = time.time()
 

@@ -50,12 +50,10 @@ async def run_test(number_of_day, total_number, type_request):
                             d = list(map(float, l.strip().split(';')))
                             for ii in range(1, 11):
                                 bulk_data.append(('sensor{:03d}'.format(ii), float(d[ii]), int(d[0]),))
-                            # bulk_data.append('{}{}'.format(l[0:3], l[l.index(' '):]))
 
                         prev_time = time.time()
                         graphitesend.send_list(bulk_data)
                         bulk_time = time.time()
-                        # print(request_query)
                         resp = await session.get(request_query)
                         curr_time = time.time()
 
