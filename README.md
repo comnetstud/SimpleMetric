@@ -4,10 +4,53 @@ Latency benchmark for time series database
 ## Setup benchmark tool
 1. Install python version 3.6
 2. Install requirements `pip install -r requirements.txt`
-3. Run `data_generator.py` to generate data for benchmark
-4. Run `runner.py` to process benchmark
 
-## Setup database 
+## Run benchmark tool
+1. Run `python data_generator.py` to generate data for benchmark
+'''
+usage: data_generator.py [-h] --out_file OUT_FILE [--frequency FREQUENCY]
+                         [--start_time START_TIME] [--end_time END_TIME]
+                         [--sensor_number SENSOR_NUMBER] [--format FORMAT]
+
+Generate values
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --out_file OUT_FILE   Output file
+  --frequency FREQUENCY
+                        Frequency in seconds (default: 1 sec)
+  --start_time START_TIME
+                        Beginning timestamp (RFC3339). (default
+                        "2019-01-01T00:00:00Z")
+  --end_time END_TIME   Ending timestamp (RFC3339). (default
+                        "2019-01-02T00:00:00Z")
+  --sensor_number SENSOR_NUMBER
+                        Number of sensors (default: 10)
+  --format FORMAT       Please select output format ["influx", "csv", "json"]
+                        (default: "influx")
+'''
+2. Run `python runner.py` to process benchmark
+'''
+usage: runner.py [-h] [--thread THREAD] [--aggregate AGGREGATE]
+                 [--latency LATENCY] [--packetloss PACKETLOSS] --database
+                 DATABASE
+
+Load data test
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --thread THREAD       number of connections. default is 1
+  --aggregate AGGREGATE
+                        type of aggregate function [max, count, avg, sum].
+                        default is "sum"
+  --latency LATENCY     latency in ms.
+  --packetloss PACKETLOSS
+                        packet loss type in percentage
+  --database DATABASE   database type [cratedb, graphite, influxdb, kairosdb,
+                        kdb, timescaledb]
+'''
+
+## Setup database within Docker container
 
 ### InfluxDB
 1. Pull Docker image `docker pull influxdb:latest`
@@ -34,4 +77,3 @@ Latency benchmark for time series database
 ### TimescaleDB
 1. Pull Docker image `docker pull timescale/timescaledb`
 2. Run Docker container `docker run -p 5432:5432 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=benchmarkdb timescale/timescaledb`
-
