@@ -80,8 +80,9 @@ optional arguments:
 ### [KDB+](https://kx.com/)
 1. Download 'q.zip' from https://kx.com/connect-with-us/download/
 2. Copy 'q.zip' to the docker/kdb/ folder
-3. Build KairosDB docker with `docker build -t kairosdb -f kairosdb/Dockerfile .`
+3. Build KDB+ docker with `docker build -t kdb -f kdb/Dockerfile .`
 4. Run Docker container `docker run -p 5000:5000 kdb q -p 5000`
+5. To run benchmark for KDB+ it is necessary to install `java`. For Ubuntu you can use this command: `sudo apt install openjdk-8-jdk`.
 
 ### [Graphite](https://graphiteapp.org/)
 1. Got to the docker directory `cd docker`

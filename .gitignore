@@ -128,3 +128,4 @@ Vagrantfile
 vagrant/*
 analysis/*
 data/*
+docker/kdb/q.zip
