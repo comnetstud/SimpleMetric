@@ -77,19 +77,44 @@ optional arguments:
 1. Pull Docker image `docker pull crate:latest`
 2. Run Docker container `docker run -p 4200:4200 -p 4300:4300 -p 5432:5432 crate:latest -Ccluster.name=democluster -Chttp.cors.enabled=true -Chttp.cors.allow-origin="*"`
 
+## Simulate network latency and packet loss
+
+Network simulation was done by 
+
+### Setup network simualtion
+1. Install `tc` and `netem` linux tools
+2. `docker network create slownet`
+3. `docker network inspect slownet`
+4. `ifconfig` and pick right network id based on `docker network inspect` and `ifconfig`. Let's assume it will be called NETWORKID
+
+### Run network simulation
+1. Here is an example how to setup network latency 10ms and packet loss 5%:
+```
+tc qdisc add dev NETWORKID root netem delay 10ms loss 5%
+```
+2. Remove any latency and packet loss from network
+```
+tc qdisc del dev NETWORKID root
+```
+3. To apply latency and packet loss it is necessary to provide NETWORKID to container
+```
+docker run --net=slownet ... 
+```
+
 ## Benchmark result
 
 ### Control loop computational overhead, 1 connection
 ![alt text](https://raw.githubusercontent.com/comnetstud/SimpleMetric/master/images/average_latency_one_thread.png "Control loop computational overhead, 1 connection")
-
+***
 ### Control loop computational overhead, 5 concurrent connections
 ![alt text](https://raw.githubusercontent.com/comnetstud/SimpleMetric/master/images/average_latency_five_thread.png "Control loop computational overhead, 5 concurrent connections")
-
+***
 ### ECDF of INSERT successful completion w.r.t. time. InluxDB and Graphite comparison. 1, 5, and 10 concurrent connections.
 ![alt text](https://raw.githubusercontent.com/comnetstud/SimpleMetric/master/images/influxdb_graphite_comparison_insert.png "ECDF of INSERT successful completion w.r.t. time. InluxDB and Graphite comparison. 1, 5, and 10 concurrent connections.")
-
+***
 ### ECDF of INSERT and aggregate successful completion w.r.t. time. InluxDB and Graphite comparison. 1, 5, and 10 concurrent connections.
 ![alt text](https://raw.githubusercontent.com/comnetstud/SimpleMetric/master/images/influxdb_graphite_comparison.png "ECDF of INSERT and aggregate successful completion w.r.t. time. InluxDB and Graphite comparison. 1, 5, and 10 concurrent connections.")
-
+***
 ### ECDF of INSERT successful completion w.r.t. time and varying network conditions. InluxDB (format: number of concurrent connections j network latency j packet loss rate)
 ![alt text](https://raw.githubusercontent.com/comnetstud/SimpleMetric/master/images/network_influxdb_comparison.png "ECDF of INSERT successful completion w.r.t. time and varying network conditions. InluxDB (format: number of concurrent connections j network latency j packet loss rate)")
+***
