@@ -45,14 +45,14 @@ public class BulkLoadAndRetrieveDataRunnable implements Runnable {
                 if (latencyType != null) {
                     network.append("_").append(latencyType).append("_").append(packetlossType);
                 }
-                File analysisFile = new File("../../analysis/kdb/bulk_load_and_retrieve/bulk_load_and_retrieve_" + number + "_" + totalNumber + "_" + typeRequest + network.toString() + ".txt");
+                File analysisFile = new File("../analysis/kdb/latency_meter/latency_meter_" + number + "_" + totalNumber + "_" + typeRequest + network.toString() + ".txt");
                 analysisFile.createNewFile();
 
                 FileWriter fileWriter = new FileWriter(analysisFile);
                 PrintWriter printWriter = new PrintWriter(fileWriter);
 
 
-                reader = new BufferedReader(new FileReader("../../data/csv/csv_1sec_" + number + "d.dat"));
+                reader = new BufferedReader(new FileReader("../data/csv/csv_1sec_" + number + "d.dat"));
                 String line = reader.readLine();
                 int count = 0;
                 while (line != null) {
