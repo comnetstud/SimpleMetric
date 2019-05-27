@@ -7,7 +7,7 @@ Latency benchmark for time series database
 
 ## Run benchmark tool
 1. Run `python data_generator.py` to generate data for benchmark
-'''
+```
 usage: data_generator.py [-h] --out_file OUT_FILE [--frequency FREQUENCY]
                          [--start_time START_TIME] [--end_time END_TIME]
                          [--sensor_number SENSOR_NUMBER] [--format FORMAT]
@@ -28,9 +28,9 @@ optional arguments:
                         Number of sensors (default: 10)
   --format FORMAT       Please select output format ["influx", "csv", "json"]
                         (default: "influx")
-'''
+```
 2. Run `python runner.py` to process benchmark
-'''
+```
 usage: runner.py [-h] [--thread THREAD] [--aggregate AGGREGATE]
                  [--latency LATENCY] [--packetloss PACKETLOSS] --database
                  DATABASE
@@ -48,8 +48,7 @@ optional arguments:
                         packet loss type in percentage
   --database DATABASE   database type [cratedb, graphite, influxdb, kairosdb,
                         kdb, timescaledb]
-'''
-
+```
 ## Setup database within Docker container
 
 ### InfluxDB
