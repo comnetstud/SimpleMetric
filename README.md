@@ -79,13 +79,13 @@ optional arguments:
 
 ## Simulate network latency and packet loss
 
-Network simulation was done by 
+Network simulation was done by `tc` and `netem`
 
 ### Setup network simualtion
 1. Install `tc` and `netem` linux tools
-2. `docker network create slownet`
-3. `docker network inspect slownet`
-4. `ifconfig` and pick right network id based on `docker network inspect` and `ifconfig`. Let's assume it will be called NETWORKID
+2. Run `docker network create slownet` to create a slow network
+3. Run `docker network inspect slownet` to get the id of the slow network
+4. Run `ifconfig` and pick right network id based on `docker network inspect` and `ifconfig`. Let's assume it will be called NETWORKID
 
 ### Run network simulation
 1. Here is an example how to setup network latency 10ms and packet loss 5%:
