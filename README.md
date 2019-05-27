@@ -81,3 +81,15 @@ optional arguments:
 
 ### Control loop computational overhead, 1 connection
 ![alt text](https://raw.githubusercontent.com/comnetstud/SimpleMetric/master/images/average_latency_one_thread.png "Control loop computational overhead, 1 connection")
+
+### Control loop computational overhead, 5 concurrent connections
+![alt text](https://raw.githubusercontent.com/comnetstud/SimpleMetric/master/images/average_latency_five_thread.png "Control loop computational overhead, 5 concurrent connections")
+
+### ECDF of INSERT successful completion w.r.t. time. InluxDB and Graphite comparison. 1, 5, and 10 concurrent connections.
+![alt text](https://raw.githubusercontent.com/comnetstud/SimpleMetric/master/images/influxdb_graphite_comparison_insert.png "ECDF of INSERT successful completion w.r.t. time. InluxDB and Graphite comparison. 1, 5, and 10 concurrent connections.")
+
+### ECDF of INSERT and aggregate successful completion w.r.t. time. InluxDB and Graphite comparison. 1, 5, and 10 concurrent connections.
+![alt text](https://raw.githubusercontent.com/comnetstud/SimpleMetric/master/images/influxdb_graphite_comparison.png "ECDF of INSERT and aggregate successful completion w.r.t. time. InluxDB and Graphite comparison. 1, 5, and 10 concurrent connections.")
+
+### ECDF of INSERT successful completion w.r.t. time and varying network conditions. InluxDB (format: number of concurrent connections j network latency j packet loss rate)
+![alt text](https://raw.githubusercontent.com/comnetstud/SimpleMetric/master/images/network_influxdb_comparison.png "ECDF of INSERT successful completion w.r.t. time and varying network conditions. InluxDB (format: number of concurrent connections j network latency j packet loss rate)")
