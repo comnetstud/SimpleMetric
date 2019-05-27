@@ -29,6 +29,27 @@ optional arguments:
   --format FORMAT       Please select output format ["influx", "csv", "json"]
                         (default: "influx")
 ```
+
+Here is snippet of Python code to simplify running of data_generator
+```python
+from datetime import datetime, timedelta
+import os
+
+start = datetime(2019, 1, 1)
+
+if not os.path.exists('../data/csv/'):
+	os.makedirs('../data/csv/')
+
+for i in range(1, 101):
+    delta = timedelta(days=1)
+    stop = start + delta
+    start_date = start.strftime('%Y-%m-%dT%H:%M:%SZ')
+    stop_date = stop.strftime('%Y-%m-%dT%H:%M:%SZ')
+    cmd = 'python data_generator.py --start_time "{start}" --end_time "{stop}" --format "csv" --sensor_number 10 --out_file ../data/csv/csv_1sec_{day}d.dat'.format(start=start_date, stop=stop_date, day=i)
+    start = stop
+    os.system(cmd)
+```
+
 2. Run `python runner.py` to process benchmark
 ```
 usage: runner.py [-h] [--thread THREAD] [--aggregate AGGREGATE]
@@ -49,6 +70,7 @@ optional arguments:
   --database DATABASE   database type [cratedb, graphite, influxdb, kairosdb,
                         kdb, timescaledb]
 ```
+
 ## Setup database within Docker container
 
 ### [InfluxDB](https://www.influxdata.com/)
@@ -58,25 +80,31 @@ optional arguments:
 ### [KDB+](https://kx.com/)
 1. Download 'q.zip' from https://kx.com/connect-with-us/download/
 2. Copy 'q.zip' to the docker/kdb/ folder
-3. Build KairosDB docker with `docker build -t kairosdb -f docker/kairosdb/Dockerfile`
+3. Build KairosDB docker with `docker build -t kairosdb -f kairosdb/Dockerfile .`
 4. Run Docker container `docker run -p 5000:5000 kdb q -p 5000`
 
 ### [Graphite](https://graphiteapp.org/)
-1. Build Graphite docker with `docker build -t graphite -f docker/graphite/Dockerfile`
-2. Run Docker container `docker run -p 2003:2003 -p 8000:8000 graphite`
+1. Got to the docker directory `cd docker`
+2. Build Graphite docker with `docker build -t graphite -f graphite/Dockerfile .`
+3. Run Docker container `docker run -p 2003:2003 -p 8000:8000 graphite`
 
 ### [TimescaleDB](https://www.timescale.com/)
-1. Pull Docker image `docker pull timescale/timescaledb`
-2. Run Docker container `docker run -p 5432:5432 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=benchmarkdb timescale/timescaledb`
+1. Got to the docker directory `cd docker`
+2. Pull Docker image `docker pull timescale/timescaledb`
+3. Run Docker container `docker run -p 5432:5432 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=benchmarkdb timescale/timescaledb`
 
 ### [KairosDB](https://kairosdb.github.io/)
-1. Build KairosDB docker with `docker build -t kairosdb -f docker/kairosdb/Dockerfile`
-2. Run Docker container `docker run -p 4242:4242 -p 8080:8080 kairosdb`
+1. Got to the docker directory `cd docker`
+2. Build KairosDB docker with `docker build -t kairosdb -f kairosdb/Dockerfile .`
+3. Run Docker container `docker run -p 4242:4242 -p 8080:8080 kairosdb`
 
 ### [CrateDB](https://crate.io/)
 1. Pull Docker image `docker pull crate:latest`
 2. Run Docker container `docker run -p 4200:4200 -p 4300:4300 -p 5432:5432 crate:latest -Ccluster.name=democluster -Chttp.cors.enabled=true -Chttp.cors.allow-origin="*"`
-
+* In case of _"ERROR: max virtual memory areas vm.max_map_count [65530] is too low, increase to at least [262144]"_ please run this command before starting docker:
+```
+sudo sysctl -w vm.max_map_count=262144
+```
 ## Simulate network latency and packet loss
 
 Network simulation was done by `tc` and `netem`

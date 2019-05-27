@@ -2,6 +2,7 @@ import argparse
 import asyncio
 import os
 import sys
+import traceback
 import time
 from datetime import datetime
 
@@ -32,7 +33,6 @@ def cleanup_db():
         if (connection):
             cursor.close()
             connection.close()
-            print("Crate connection is closed")
 
 def setup_report():
     if not os.path.exists('{}/{}'.format(ANALYSIS_DIRECTORY, BENCHMARK_TEST)):
@@ -44,7 +44,7 @@ async def run_test(number_of_day, total_number, type_request):
         conn = client.connect('http://localhost:4200/', username='crate')
         cursor = conn.cursor()
         try:
-            with open('../../data/csv/csv_1sec_{}d.dat'.format(number_of_day), 'rt') as f:
+            with open('../data/csv/csv_1sec_{}d.dat'.format(number_of_day), 'rt') as f:
                 f.readline()
                 network_setup = ''
                 if LATENCY_TYPE or PACKETLOSS_TYPE:
@@ -79,6 +79,7 @@ async def run_test(number_of_day, total_number, type_request):
         conn.close()
     except Exception as ex:
         print('Error: {}'.format(ex))
+        traceback.print_exc(limit=1, file=sys.stdout)
 
 def main(argv):
     parser = argparse.ArgumentParser(description='Load data test')

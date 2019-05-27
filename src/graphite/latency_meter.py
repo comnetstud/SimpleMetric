@@ -10,7 +10,7 @@ import aiohttp
 import graphitesend
 
 ANALYSIS_DIRECTORY = "../analysis/graphite"
-BENCHMARK_TEST = "bulk_load_and_retrieve"
+BENCHMARK_TEST = "latency_meter"
 QUERY_TYPE_LIST = {
     'max': "http://localhost:8000/render?target=summarize(systems.il-test.sensor001,'1year','max')&from=START_DATE&until=END_DATE&format=json",
     'sum': "http://localhost:8000/render?target=summarize(systems.il-test.sensor001,'1year','sum')&from=START_DATE&until=END_DATE&format=json",
@@ -34,7 +34,7 @@ async def run_test(number_of_day, total_number, type_request):
             'END_DATE', end_date.strftime('%Y%m%d'))
         graphitesend.init(graphite_server='localhost')
         async with aiohttp.ClientSession() as session:
-            with open('../../data/csv/csv_1sec_{}d.dat'.format(number_of_day), 'rt') as f:
+            with open('../data/csv/csv_1sec_{}d.dat'.format(number_of_day), 'rt') as f:
                 f.readline()
                 network_setup = ''
                 if LATENCY_TYPE or PACKETLOSS_TYPE:

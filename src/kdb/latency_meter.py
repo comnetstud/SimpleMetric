@@ -43,9 +43,3 @@ def main(argv):
 
 if __name__ == '__main__':
     sys.exit(main(argv=sys.argv))
-
-
-
-
-
-java -jar kdb.jar -t {thread} -r "{type_request}

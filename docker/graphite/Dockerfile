@@ -50,11 +50,11 @@ RUN \
 # RUN pip install -y graphite-api[cache]
 
 # Graphite
-COPY conf/graphite/ /opt/graphite/conf/
+COPY graphite/conf/graphite/ /opt/graphite/conf/
 # Supervisord
-COPY conf/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY graphite/conf/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 # Graphite API
-COPY conf/graphite-api.yaml /etc/graphite-api.yaml
+COPY graphite/conf/graphite-api.yaml /etc/graphite-api.yaml
 
 # nginx
 EXPOSE \
