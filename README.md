@@ -51,28 +51,28 @@ optional arguments:
 ```
 ## Setup database within Docker container
 
-### InfluxDB
+### [InfluxDB](https://www.influxdata.com/)
 1. Pull Docker image `docker pull influxdb:latest`
 2. Run Docker container `docker run -p 8086:8086 -p 8083:8083 -p 8090:8090 -e INFLUXDB_REPORTING_DISABLED=true -e INFLUXDB_DATA_QUERY_LOG_ENABLED=false -e INFLUXDB_HTTP_LOG_ENABLED=false -e INFLUXDB_CONTINUOUS_QUERIES_LOG_ENABLED=false influxdb:latest`
 
-### CrateDB
+### [CrateDB](https://crate.io/)
 1. Pull Docker image `docker pull crate:latest`
 2. Run Docker container `docker run -p 4200:4200 -p 4300:4300 -p 5432:5432 crate:latest -Ccluster.name=democluster -Chttp.cors.enabled=true -Chttp.cors.allow-origin="*"`
 
-### Graphite
+### [Graphite](https://graphiteapp.org/)
 1. Build Graphite docker with `docker build -t graphite -f docker/graphite/Dockerfile`
 2. Run Docker container `docker run -p 2003:2003 -p 8000:8000 graphite`
 
-### KairosDB
+### [KairosDB](https://kairosdb.github.io/)
 1. Build KairosDB docker with `docker build -t kairosdb -f docker/kairosdb/Dockerfile`
 2. Run Docker container `docker run -p 4242:4242 -p 8080:8080 kairosdb`
 
-### KDB+
+### [KDB+](https://kx.com/)
 1. Download 'q.zip' from https://kx.com/connect-with-us/download/
 2. Copy 'q.zip' to the docker/kdb/ folder
 3. Build KairosDB docker with `docker build -t kairosdb -f docker/kairosdb/Dockerfile`
 4. Run Docker container `docker run -p 5000:5000 kdb q -p 5000`
 
-### TimescaleDB
+### [TimescaleDB](https://www.timescale.com/)
 1. Pull Docker image `docker pull timescale/timescaledb`
 2. Run Docker container `docker run -p 5432:5432 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=benchmarkdb timescale/timescaledb`
